@@ -1,0 +1,38 @@
+{
+  "info": {"name": "Mini E-Commerce API", "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json", "description": "Register or log in, use the saved bearer token, add a product to the cart, place an order, and view it."},
+  "auth": {"type": "bearer", "bearer": [{"key": "token", "value": "{{token}}", "type": "string"}]},
+  "variable": [{"key": "base_url", "value": "http://127.0.0.1:8000/api"}, {"key": "token", "value": ""}, {"key": "product_id", "value": "1"}, {"key": "category_id", "value": "1"}, {"key": "cart_item_id", "value": "1"}, {"key": "order_id", "value": "1"}],
+  "item": [
+    {"name": "Authentication", "item": [
+      {"name": "Register", "event": [{"listen": "test", "script": {"exec": ["const body = pm.response.json();", "if (body.token) pm.collectionVariables.set('token', body.token);"]}}], "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"name\":\"Alex Morgan\",\"email\":\"alex@example.com\",\"password\":\"secret123\",\"password_confirmation\":\"secret123\"}"}, "url": "{{base_url}}/register"}},
+      {"name": "Login", "event": [{"listen": "test", "script": {"exec": ["const body = pm.response.json();", "if (body.token) pm.collectionVariables.set('token', body.token);"]}}], "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"email\":\"alex@example.com\",\"password\":\"secret123\"}"}, "url": "{{base_url}}/login"}},
+      {"name": "Current user", "request": {"method": "GET", "url": "{{base_url}}/user"}},
+      {"name": "Logout", "request": {"method": "POST", "url": "{{base_url}}/logout"}}
+    ]},
+    {"name": "Categories", "item": [
+      {"name": "List categories", "request": {"method": "GET", "url": "{{base_url}}/categories"}},
+      {"name": "Show category", "request": {"method": "GET", "url": "{{base_url}}/categories/{{category_id}}"}},
+      {"name": "Create category", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"name\":\"Accessories\"}"}, "url": "{{base_url}}/categories"}},
+      {"name": "Update category", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"name\":\"Accessories and More\"}"}, "url": "{{base_url}}/categories/{{category_id}}"}},
+      {"name": "Delete category", "request": {"method": "DELETE", "url": "{{base_url}}/categories/{{category_id}}"}}
+    ]},
+    {"name": "Products", "item": [
+      {"name": "List products", "request": {"method": "GET", "url": "{{base_url}}/products?search=phone&per_page=10&page=1"}},
+      {"name": "Show product", "request": {"method": "GET", "url": "{{base_url}}/products/{{product_id}}"}},
+      {"name": "Create product", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"category_id\":1,\"name\":\"Wireless Headphones\",\"description\":\"Bluetooth headphones\",\"price\":79.99,\"stock\":25}"}, "url": "{{base_url}}/products"}},
+      {"name": "Update product", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"price\":69.99,\"stock\":30}"}, "url": "{{base_url}}/products/{{product_id}}"}},
+      {"name": "Delete product", "request": {"method": "DELETE", "url": "{{base_url}}/products/{{product_id}}"}}
+    ]},
+    {"name": "Cart", "item": [
+      {"name": "View cart", "request": {"method": "GET", "url": "{{base_url}}/cart"}},
+      {"name": "Add item", "request": {"method": "POST", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"product_id\":1,\"quantity\":2}"}, "url": "{{base_url}}/cart/items"}},
+      {"name": "Update item", "request": {"method": "PUT", "header": [{"key": "Content-Type", "value": "application/json"}], "body": {"mode": "raw", "raw": "{\"quantity\":3}"}, "url": "{{base_url}}/cart/items/{{cart_item_id}}"}},
+      {"name": "Remove item", "request": {"method": "DELETE", "url": "{{base_url}}/cart/items/{{cart_item_id}}"}}
+    ]},
+    {"name": "Orders", "item": [
+      {"name": "List orders", "request": {"method": "GET", "url": "{{base_url}}/orders?per_page=10&page=1"}},
+      {"name": "Place order", "request": {"method": "POST", "url": "{{base_url}}/orders"}},
+      {"name": "Show order", "request": {"method": "GET", "url": "{{base_url}}/orders/{{order_id}}"}}
+    ]}
+  ]
+}
