@@ -37,7 +37,8 @@ COPY . .
 COPY --from=assets /app/public/build ./public/build
 COPY docker/render-nginx.conf /etc/nginx/sites-available/default
 
-RUN composer dump-autoload --no-dev --optimize --no-interaction \
+RUN mkdir -p storage/framework/cache/data storage/framework/sessions storage/framework/views storage/logs bootstrap/cache \
+    && composer dump-autoload --no-dev --optimize --no-interaction --no-scripts \
     && php artisan package:discover --ansi \
     && php artisan filament:assets \
     && php artisan storage:link \
