@@ -15,7 +15,7 @@ class MakeUserAdmin extends Command
     {
         $email = trim((string) ($this->argument('email') ?: env('ADMIN_EMAIL', '')));
 
-        if (!$email && !$this->input->isInteractive()) {
+        if ($email === '') {
             $this->info('Admin bootstrap skipped: ADMIN_EMAIL is not configured.');
 
             return self::SUCCESS;
