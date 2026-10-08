@@ -46,4 +46,4 @@ RUN mkdir -p storage/framework/cache/data storage/framework/sessions storage/fra
 
 EXPOSE 10000
 
-CMD ["sh", "-c", "php artisan migrate --force && if [ -n \"$ADMIN_EMAIL\" ]; then php artisan app:make-admin; fi && php-fpm -D && nginx -g 'daemon off;'"]
+CMD ["sh", "-c", "php artisan migrate --force && php artisan app:make-admin && php-fpm -D && nginx -g 'daemon off;'"]

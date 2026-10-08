@@ -15,6 +15,12 @@ class MakeUserAdmin extends Command
     {
         $email = $this->argument('email') ?: env('ADMIN_EMAIL');
 
+        if (!$email && !$this->input->isInteractive()) {
+            $this->info('Admin bootstrap skipped: ADMIN_EMAIL is not configured.');
+
+            return self::SUCCESS;
+        }
+
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->error('Enter a valid email address.');
 
@@ -55,7 +61,20 @@ class MakeUserAdmin extends Command
             ]);
         }
 
-        $user->forceFill(['is_admin' => true])->save();
+        $attributes = ['is_admin' => true];
+        $adminPassword = (string) env('ADMIN_PASSWORD', '');
+
+        if ($adminPassword !== '') {
+            if (strlen($adminPassword) < 8) {
+                $this->error('ADMIN_PASSWORD must be at least 8 characters.');
+
+                return self::FAILURE;
+            }
+
+            $attributes['password'] = $adminPassword;
+        }
+
+        $user->forceFill($attributes)->save();
         $this->info('Admin account is ready. Sign in at /admin.');
 
         return self::SUCCESS;
