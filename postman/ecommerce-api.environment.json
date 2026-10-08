@@ -1,9 +1,14 @@
 {
-  "name": "Mini E-Commerce API",
-  "values": [
-    {"key": "base_url", "value": "http://127.0.0.1:8000/api", "type": "default", "enabled": true},
-    {"key": "token", "value": "", "type": "secret", "enabled": true}
-  ],
-  "_postman_variable_scope": "environment",
-  "_postman_exported_using": "Postman/10"
+    "name": "Mini E-Commerce API",
+    "values": [
+        {
+            "key": "base_url",
+            "value": "https://e-commerce-3j0z.onrender.com/api",
+            "type": "default",
+            "enabled": true
+        },
+        { "key": "token", "value": "", "type": "secret", "enabled": true }
+    ],
+    "_postman_variable_scope": "environment",
+    "_postman_exported_using": "Postman/10"
 }

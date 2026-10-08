@@ -36,6 +36,7 @@ class EcommerceApiTest extends TestCase
 
     public function test_category_crud(): void
     {
+        $this->actingAs($this->adminUser(), 'sanctum');
         $this->postJson('/api/categories', ['name' => 'Audio'])->assertCreated();
         $category = Category::where('name', 'Audio')->firstOrFail();
         $this->getJson('/api/categories/'.$category->id)->assertOk()->assertJsonPath('data.name', 'Audio');
@@ -45,6 +46,7 @@ class EcommerceApiTest extends TestCase
 
     public function test_product_catalog_search_pagination_and_crud(): void
     {
+        $this->actingAs($this->adminUser(), 'sanctum');
         $category = Category::factory()->create();
         Product::factory(3)->create(['category_id' => $category->id, 'name' => 'Phone Case']);
         Product::factory()->create(['category_id' => $category->id, 'name' => 'Desk Lamp']);
@@ -101,5 +103,21 @@ class EcommerceApiTest extends TestCase
         $this->assertSame(4, $item->fresh()->quantity);
         $this->deleteJson('/api/cart/items/'.$item->id)->assertNoContent();
         $this->assertDatabaseMissing('cart_items', ['id' => $item->id]);
+    }
+
+    public function test_normal_users_cannot_manage_products_or_categories(): void
+    {
+        $this->actingAs(User::factory()->create(), 'sanctum');
+
+        $this->postJson('/api/categories', ['name' => 'Audio'])->assertForbidden();
+        $this->postJson('/api/products', [])->assertForbidden();
+    }
+
+    private function adminUser(): User
+    {
+        $user = User::factory()->create();
+        $user->forceFill(['is_admin' => true])->save();
+
+        return $user;
     }
 }
